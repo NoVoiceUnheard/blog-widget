@@ -7,6 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background: #f0f2f5;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -20,7 +21,7 @@
             font-size: 22px;
             margin-bottom: 15px;
             font-weight: bold;
-            color: #ffffff;
+            color: #14171a;
             border-bottom: 2px solid #ddd;
             padding-bottom: 10px;
         }
@@ -30,7 +31,7 @@
             margin: 0;
         }
         .rss-item {
-            background: #18157C;
+            background: #fff;
             border-radius: 12px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 15px;
@@ -40,7 +41,7 @@
         }
         .rss-header {
             font-size: 14px;
-            color: #fff;
+            color: #657786;
             margin-bottom: 5px;
         }
         .rss-item img {
@@ -53,7 +54,7 @@
         }
         .rss-content a {
             text-decoration: none;
-            color: #fff;
+            color: #14171a;
             font-size: 18px;
             font-weight: bold;
             display: block;
@@ -61,7 +62,7 @@
         }
         .rss-content p {
             font-size: 14px;
-            color: #fff;
+            color: #333;
             margin: 0;
             line-height: 1.4;
         }
@@ -69,6 +70,11 @@
             color: #1da1f2;
             font-size: 14px;
             margin-top: 8px;
+        }
+        .hashtags a {
+            text-decoration: none;
+            color: #1da1f2;
+            margin-right: 5px;
         }
         @media (max-width: 480px) {
             .rss-widget {
@@ -104,7 +110,8 @@
                     if (index < 5) {
                         const title = item.querySelector("title").textContent;
                         const link = item.querySelector("link").textContent;
-                        let description = item.querySelector("description")?.textContent || "No description available.";
+                        let descriptionElement = item.getElementsByTagName("content:encoded")[0];
+                        let description = descriptionElement ? descriptionElement.textContent : "No description available.";
                         
                         // Remove CDATA wrapper if present
                         description = description.replace(/<!\[CDATA\[(.*?)\]\]>/gs, "$1");
@@ -113,12 +120,18 @@
                         const imgMatch = description.match(/<img.*?src=["'](.*?)["']/);
                         const imgSrc = imgMatch ? imgMatch[1] : null;
                         
-                        // Extract hashtags from description
-                        const hashtagMatch = description.match(/#[a-zA-Z0-9_]+/g);
-                        const hashtags = hashtagMatch ? hashtagMatch.join(" ") : "";
+                        // Extract hashtags with span class="p-category"
+                        const tempDiv = document.createElement("div");
+                        tempDiv.innerHTML = description;
+                        const hashtagElements = tempDiv.querySelectorAll("span.p-category");
+                        const hashtags = Array.from(hashtagElements).map(el => {
+                            const tag = el.textContent.trim();
+                            return `<a href="https://write.as/novoiceunheard/tag:${encodeURIComponent(tag)}" target="_blank">#${tag}</a>`;
+                        }).join(" ");
                         
-                        // Remove hashtags from description text
-                        const cleanDescription = description.replace(/<[^>]*>/g, "").replace(/#[a-zA-Z0-9_]+/g, "").trim().substring(0, 150) + "...";
+                        // Remove hashtags and other HTML tags from description text
+                        tempDiv.querySelectorAll("span.p-category").forEach(el => el.remove());
+                        const cleanDescription = tempDiv.textContent.trim().substring(0, 150) + "...";
                         
                         html += `
                             <li class="rss-item">
