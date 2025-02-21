@@ -41,7 +41,7 @@
     
     <script>
         async function fetchRSS() {
-            const feedUrl = 'https://write.as/YOUR_USERNAME/feed/'; // Update with your Write.as feed
+            const feedUrl = 'https://write.as/novoiceunheard/feed/'; // Update with your Write.as feed
             try {
                 const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`);
                 const data = await response.json();
