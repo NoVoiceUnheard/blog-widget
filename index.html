@@ -129,7 +129,7 @@
                         if (tagFilter) {
                             const tagMatches = hashtags.some(tag => tag.toLowerCase() === tagFilter.toLowerCase());
                             if (!tagMatches) return; // Skip this item if no matching tags
-                        }
+                        } console.log(tagMatches);
         
                         // Generate hashtag links
                         const hashtagLinks = hashtags.map(tag => 
