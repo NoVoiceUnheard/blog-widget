@@ -125,8 +125,10 @@
                         const hashtags = Array.from(hashtagElements).map(el => el.textContent.trim());
         
                         // Filter by hashtag if tagFilter exists
-                        if (tagFilter && !hashtags.includes(tagFilter)) {
-                            return; // Skip items that don't match the filter
+                        // Convert tagFilter to lowercase for case-insensitive comparison
+                        if (tagFilter) {
+                            const tagMatches = hashtags.some(tag => tag.toLowerCase() === tagFilter.toLowerCase());
+                            if (!tagMatches) return; // Skip this item if no matching tags
                         }
         
                         // Generate hashtag links
