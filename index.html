@@ -97,6 +97,10 @@
     </div>
     
     <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const tagFilter = urlParams.get('tag'); // e.g., "announcement"
+
         async function fetchRSS() {
             const feedUrl = 'https://write.as/novoiceunheard/feed/';
             try {
