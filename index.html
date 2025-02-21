@@ -7,6 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background: transparent;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -20,7 +21,7 @@
             font-size: 22px;
             margin-bottom: 15px;
             font-weight: bold;
-            color: #fff;
+            color: #ffffff;
             border-bottom: 2px solid #ddd;
             padding-bottom: 10px;
         }
@@ -37,10 +38,11 @@
             padding: 15px;
             display: flex;
             flex-direction: column;
+            color: #ffffff;
         }
         .rss-header {
             font-size: 14px;
-            color: #fff;
+            color: #ffffff;
             margin-bottom: 5px;
         }
         .rss-item img {
@@ -53,7 +55,7 @@
         }
         .rss-content a {
             text-decoration: none;
-            color: #fff;
+            color: #ffffff;
             font-size: 18px;
             font-weight: bold;
             display: block;
@@ -61,7 +63,7 @@
         }
         .rss-content p {
             font-size: 14px;
-            color: #fff;
+            color: #ffffff;
             margin: 0;
             line-height: 1.4;
         }
@@ -112,14 +114,11 @@
                         let descriptionElement = item.getElementsByTagName("content:encoded")[0];
                         let description = descriptionElement ? descriptionElement.textContent : "No description available.";
                         
-                        // Remove CDATA wrapper if present
                         description = description.replace(/<!\[CDATA\[(.*?)\]\]>/gs, "$1");
                         
-                        // Extract first image from description if available
                         const imgMatch = description.match(/<img.*?src=["'](.*?)["']/);
                         const imgSrc = imgMatch ? imgMatch[1] : null;
                         
-                        // Extract hashtags with span class="p-category"
                         const tempDiv = document.createElement("div");
                         tempDiv.innerHTML = description;
                         const hashtagElements = tempDiv.querySelectorAll("span.p-category");
@@ -128,7 +127,6 @@
                             return `<a href="https://write.as/novoiceunheard/tag:${encodeURIComponent(tag)}" target="_blank">#${tag}</a>`;
                         }).join(" ");
                         
-                        // Remove hashtags and other HTML tags from description text
                         tempDiv.querySelectorAll("span.p-category").forEach(el => el.remove());
                         const cleanDescription = tempDiv.textContent.trim().substring(0, 150) + "...";
                         
