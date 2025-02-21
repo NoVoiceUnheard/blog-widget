@@ -100,7 +100,7 @@
         // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const tagFilter = urlParams.get('tag'); // e.g., "announcement"
-
+        
         async function fetchRSS() {
             const feedUrl = 'https://write.as/novoiceunheard/feed/';
             try {
@@ -109,7 +109,7 @@
                 const parser = new DOMParser();
                 const xml = parser.parseFromString(data.contents, "text/xml");
                 const items = xml.querySelectorAll("item");
-                
+        
                 let html = "";
                 items.forEach((item, index) => {
                     if (index < 5) {
@@ -117,40 +117,41 @@
                         const link = item.querySelector("link").textContent;
                         let descriptionElement = item.getElementsByTagName("content:encoded")[0];
                         let description = descriptionElement ? descriptionElement.textContent : "No description available.";
-                        
-                        description = description.replace(/<!\[CDATA\[(.*?)\]\]>/gs, "$1");
-                        
-                        const imgMatch = description.match(/<img.*?src=["'](.*?)["']/);
-                        const imgSrc = imgMatch ? imgMatch[1] : null;
-                        
+        
+                        // Extract hashtags
                         const tempDiv = document.createElement("div");
                         tempDiv.innerHTML = description;
                         const hashtagElements = tempDiv.querySelectorAll("span.p-category");
-                        const hashtags = Array.from(hashtagElements).map(el => {
-                            const tag = el.textContent.trim();
-                            return `<a href="https://write.as/novoiceunheard/tag:${encodeURIComponent(tag)}" target="_blank">#${tag}</a>`;
-                        }).join(" ");
-                        
-                        tempDiv.querySelectorAll("span.p-category").forEach(el => el.remove());
-                        const cleanDescription = tempDiv.textContent.trim().substring(0, 150) + "...";
-                        
+                        const hashtags = Array.from(hashtagElements).map(el => el.textContent.trim());
+        
+                        // Filter by hashtag if tagFilter exists
+                        if (tagFilter && !hashtags.includes(tagFilter)) {
+                            return; // Skip items that don't match the filter
+                        }
+        
+                        // Generate hashtag links
+                        const hashtagLinks = hashtags.map(tag => 
+                            `<a href="https://write.as/novoiceunheard/tag:${encodeURIComponent(tag)}" target="_blank">#${tag}</a>`
+                        ).join(" ");
+        
                         html += `
                             <li class="rss-item">
-                                ${imgSrc ? `<img src="${imgSrc}" alt="Post Image" style="display: block;">` : ""}
                                 <div class="rss-content">
                                     <a href="${link}" target="_blank">${title}</a>
-                                    <p>${cleanDescription}</p>
-                                    ${hashtags ? `<div class="hashtags">${hashtags}</div>` : ""}
+                                    <p>${description.substring(0, 150)}...</p>
+                                    ${hashtags.length ? `<div class="hashtags">${hashtagLinks}</div>` : ""}
                                 </div>
                             </li>
                         `;
                     }
                 });
+        
                 document.getElementById("rss-feed").innerHTML = html;
             } catch (error) {
                 console.error("Failed to fetch RSS feed", error);
             }
         }
+        
         fetchRSS();
     </script>
 </body>
