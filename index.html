@@ -7,23 +7,29 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background: #f0f2f5;
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .rss-widget {
             width: 100%;
-            max-width: 400px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            max-width: 500px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 15px;
-            background: #f9f9f9;
             box-sizing: border-box;
-            margin: auto;
         }
         .rss-widget h3 {
-            font-size: 18px;
-            margin-bottom: 10px;
-            text-align: center;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
         }
         .rss-list {
             list-style: none;
@@ -32,42 +38,37 @@
         }
         .rss-item {
             display: flex;
-            align-items: center;
-            margin-bottom: 15px;
+            align-items: flex-start;
+            padding: 15px;
             border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
         }
         .rss-item img {
-            width: 60px;
-            height: 60px;
+            width: 48px;
+            height: 48px;
             object-fit: cover;
-            margin-right: 10px;
-            border-radius: 5px;
+            border-radius: 50%;
+            margin-right: 12px;
         }
         .rss-content {
             flex: 1;
         }
         .rss-content a {
             text-decoration: none;
-            color: #007bff;
+            color: #14171a;
             font-size: 16px;
-            display: block;
             font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
         }
         .rss-content p {
             font-size: 14px;
-            color: #555;
-            margin: 5px 0 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            color: #657786;
+            margin: 0;
+            line-height: 1.4;
         }
         @media (max-width: 480px) {
             .rss-widget {
                 padding: 10px;
-            }
-            .rss-widget h3 {
-                font-size: 16px;
             }
             .rss-content a {
                 font-size: 14px;
@@ -103,7 +104,7 @@
                         
                         // Extract first image from description if available
                         const imgMatch = description.match(/<img.*?src=["'](.*?)["']/);
-                        const imgSrc = imgMatch ? imgMatch[1] : "https://via.placeholder.com/60"; // Placeholder if no image
+                        const imgSrc = imgMatch ? imgMatch[1] : "https://via.placeholder.com/48"; // Placeholder if no image
                         
                         const cleanDescription = description.replace(/<[^>]*>/g, "").substring(0, 100) + "..."; // Strip HTML and truncate
                         
