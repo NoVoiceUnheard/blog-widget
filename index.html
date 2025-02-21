@@ -9,26 +9,20 @@
             font-family: Arial, sans-serif;
             background: #f0f2f5;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
         }
         .rss-widget {
             width: 100%;
-            max-width: 500px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            box-sizing: border-box;
+            max-width: 600px;
         }
         .rss-widget h3 {
-            font-size: 20px;
+            font-size: 22px;
             margin-bottom: 15px;
             font-weight: bold;
-            border-bottom: 1px solid #ddd;
+            color: #14171a;
+            border-bottom: 2px solid #ddd;
             padding-bottom: 10px;
         }
         .rss-list {
@@ -37,44 +31,55 @@
             margin: 0;
         }
         .rss-item {
-            display: flex;
-            align-items: flex-start;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
             padding: 15px;
-            border-bottom: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+        .rss-header {
+            font-size: 14px;
+            color: #657786;
+            margin-bottom: 5px;
         }
         .rss-item img {
-            width: 48px;
-            height: 48px;
+            width: 100%;
+            max-height: 200px;
             object-fit: cover;
-            border-radius: 50%;
-            margin-right: 12px;
-        }
-        .rss-content {
-            flex: 1;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: none;
         }
         .rss-content a {
             text-decoration: none;
             color: #14171a;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             display: block;
             margin-bottom: 5px;
         }
         .rss-content p {
             font-size: 14px;
-            color: #657786;
+            color: #333;
             margin: 0;
             line-height: 1.4;
+        }
+        .hashtags {
+            color: #1da1f2;
+            font-size: 14px;
+            margin-top: 8px;
         }
         @media (max-width: 480px) {
             .rss-widget {
                 padding: 10px;
             }
             .rss-content a {
-                font-size: 14px;
+                font-size: 16px;
             }
             .rss-content p {
-                font-size: 12px;
+                font-size: 13px;
             }
         }
     </style>
@@ -104,16 +109,22 @@
                         
                         // Extract first image from description if available
                         const imgMatch = description.match(/<img.*?src=["'](.*?)["']/);
-                        const imgSrc = imgMatch ? imgMatch[1] : "https://via.placeholder.com/48"; // Placeholder if no image
+                        const imgSrc = imgMatch ? imgMatch[1] : null;
                         
-                        const cleanDescription = description.replace(/<[^>]*>/g, "").substring(0, 100) + "..."; // Strip HTML and truncate
+                        // Extract hashtags from description
+                        const hashtagMatch = description.match(/#[a-zA-Z0-9_]+/g);
+                        const hashtags = hashtagMatch ? hashtagMatch.join(" ") : "";
+                        
+                        const cleanDescription = description.replace(/<[^>]*>/g, "").substring(0, 150) + "...";
                         
                         html += `
                             <li class="rss-item">
-                                <img src="${imgSrc}" alt="Post Image">
+                                <div class="rss-header">${hashtags}</div>
+                                ${imgSrc ? `<img src="${imgSrc}" alt="Post Image" style="display: block;">` : ""}
                                 <div class="rss-content">
                                     <a href="${link}" target="_blank">${title}</a>
                                     <p>${cleanDescription}</p>
+                                    <div class="hashtags">${hashtags}</div>
                                 </div>
                             </li>
                         `;
