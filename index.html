@@ -7,7 +7,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f0f2f5;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -21,7 +20,7 @@
             font-size: 22px;
             margin-bottom: 15px;
             font-weight: bold;
-            color: #14171a;
+            color: #ffffff;
             border-bottom: 2px solid #ddd;
             padding-bottom: 10px;
         }
@@ -31,7 +30,7 @@
             margin: 0;
         }
         .rss-item {
-            background: #fff;
+            background: #18157C;
             border-radius: 12px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 15px;
@@ -54,7 +53,7 @@
         }
         .rss-content a {
             text-decoration: none;
-            color: #14171a;
+            color: #ffffff;
             font-size: 18px;
             font-weight: bold;
             display: block;
@@ -62,7 +61,7 @@
         }
         .rss-content p {
             font-size: 14px;
-            color: #333;
+            color: #ffffff;
             margin: 0;
             line-height: 1.4;
         }
@@ -105,7 +104,10 @@
                     if (index < 5) {
                         const title = item.querySelector("title").textContent;
                         const link = item.querySelector("link").textContent;
-                        const description = item.querySelector("description")?.textContent || "No description available.";
+                        let description = item.querySelector("description")?.textContent || "No description available.";
+                        
+                        // Remove CDATA wrapper if present
+                        description = description.replace(/<!\[CDATA\[(.*?)\]\]>/gs, "$1");
                         
                         // Extract first image from description if available
                         const imgMatch = description.match(/<img.*?src=["'](.*?)["']/);
