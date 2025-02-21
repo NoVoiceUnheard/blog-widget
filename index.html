@@ -107,6 +107,7 @@
                 const response = await fetch(feedUrl);
                 const data = await response.json();
                 const parser = new DOMParser();
+                console.log(parser);
                 const xml = parser.parseFromString(data.contents, "text/xml");
                 const items = xml.querySelectorAll("item");
         
