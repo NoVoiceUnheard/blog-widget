@@ -122,9 +122,7 @@
                         const tempDiv = document.createElement("div");
                         tempDiv.innerHTML = description;
                         const hashtagElements = tempDiv.querySelectorAll("span.p-category");
-                        console.log(hashtagElements);
                         const hashtags = Array.from(hashtagElements).map(el => el.textContent.trim());
-        console.log(hashtags);
                         // Filter by hashtag if tagFilter exists
                         // Convert tagFilter to lowercase for case-insensitive comparison
                         if (tagFilter) {
