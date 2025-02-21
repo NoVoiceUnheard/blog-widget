@@ -7,29 +7,74 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
         .rss-widget {
             width: 100%;
-            max-width: 300px;
+            max-width: 400px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            padding: 10px;
+            padding: 15px;
             background: #f9f9f9;
+            box-sizing: border-box;
+            margin: auto;
         }
         .rss-widget h3 {
-            font-size: 16px;
-            margin-bottom: 8px;
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-align: center;
         }
         .rss-list {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
-        .rss-list li {
-            margin-bottom: 8px;
+        .rss-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
         }
-        .rss-list a {
+        .rss-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .rss-content {
+            flex: 1;
+        }
+        .rss-content a {
             text-decoration: none;
             color: #007bff;
+            font-size: 16px;
+            display: block;
+            font-weight: bold;
+        }
+        .rss-content p {
+            font-size: 14px;
+            color: #555;
+            margin: 5px 0 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        @media (max-width: 480px) {
+            .rss-widget {
+                padding: 10px;
+            }
+            .rss-widget h3 {
+                font-size: 16px;
+            }
+            .rss-content a {
+                font-size: 14px;
+            }
+            .rss-content p {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -41,7 +86,7 @@
     
     <script>
         async function fetchRSS() {
-            const feedUrl = 'https://write.as/novoiceunheard/feed/'; // Update with your Write.as feed
+            const feedUrl = 'https://write.as/novoiceunheard/feed/';
             try {
                 const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`);
                 const data = await response.json();
@@ -51,10 +96,26 @@
                 
                 let html = "";
                 items.forEach((item, index) => {
-                    if (index < 5) { // Limit to 5 posts
+                    if (index < 5) {
                         const title = item.querySelector("title").textContent;
                         const link = item.querySelector("link").textContent;
-                        html += `<li><a href="${link}" target="_blank">${title}</a></li>`;
+                        const description = item.querySelector("description")?.textContent || "No description available.";
+                        
+                        // Extract first image from description if available
+                        const imgMatch = description.match(/<img.*?src=["'](.*?)["']/);
+                        const imgSrc = imgMatch ? imgMatch[1] : "https://via.placeholder.com/60"; // Placeholder if no image
+                        
+                        const cleanDescription = description.replace(/<[^>]*>/g, "").substring(0, 100) + "..."; // Strip HTML and truncate
+                        
+                        html += `
+                            <li class="rss-item">
+                                <img src="${imgSrc}" alt="Post Image">
+                                <div class="rss-content">
+                                    <a href="${link}" target="_blank">${title}</a>
+                                    <p>${cleanDescription}</p>
+                                </div>
+                            </li>
+                        `;
                     }
                 });
                 document.getElementById("rss-feed").innerHTML = html;
